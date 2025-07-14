@@ -48,8 +48,15 @@ class FileManagerApp:
     def delete_selected(self):
         file_path = self.get_selected_file()
         if file_path:
-            delete_file(file_path)
-            self.refresh_list()
+            answer = messagebox.askyesno(
+                "Confirm Delete", f"Are you sure you want to delete:\n{file_path}?"
+            )
+            if answer:
+                try:
+                    delete_file(file_path)
+                    self.refresh_list()
+                except Exception as e:
+                    messagebox.showerror("Error", str(e))
 
     def copy_selected(self):
         file_path = self.get_selected_file()
