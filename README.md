@@ -7,7 +7,7 @@ A simple cross-platform file manager with a graphical interface built using Pyth
 - Browse files in any local folder
 - Copy, move, and delete files using buttons and dialogs
 - Graphical user interface using Tkinter
-- Unit tests for core logic using `pytest`
+- Unit-tested core logic using Python's built-in unittest framework
 - Code linting with `flake8`
 - GitHub Actions CI pipeline
 
