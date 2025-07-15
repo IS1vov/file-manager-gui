@@ -19,3 +19,9 @@ Clone the repository:
 git clone https://github.com/IS1vov/file-manager-gui.git
 cd file-manager-gui
 ```
+
+to run the tests:
+
+```bash
+PYTHONPATH=. python -m unittest discover
+```

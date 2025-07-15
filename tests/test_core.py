@@ -1,41 +1,39 @@
 import os
 import shutil
-import pytest
+import tempfile
+import unittest
 from file_manager import core
-import sys
-import os
-
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 
-@pytest.fixture
-def temp_dir(tmp_path):
-    f1 = tmp_path / "test.txt"
-    f1.write_text("hello")
-    return tmp_path
+class TestCoreFunctions(unittest.TestCase):
+    def setUp(self):
+        self.test_dir = tempfile.mkdtemp()
+        self.file1 = os.path.join(self.test_dir, "file1.txt")
+        with open(self.file1, "w") as f:
+            f.write("test")
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir)
+
+    def test_copy_file(self):
+        dest = os.path.join(self.test_dir, "copied.txt")
+        core.copy_file(self.file1, dest)
+        self.assertTrue(os.path.exists(dest))
+
+    def test_move_file(self):
+        dest = os.path.join(self.test_dir, "moved.txt")
+        core.move_file(self.file1, dest)
+        self.assertTrue(os.path.exists(dest))
+        self.assertFalse(os.path.exists(self.file1))
+
+    def test_delete_file(self):
+        core.delete_file(self.file1)
+        self.assertFalse(os.path.exists(self.file1))
+
+    def test_list_files(self):
+        files = core.list_files(self.test_dir)
+        self.assertIn("file1.txt", files)
 
 
-def test_list_files(temp_dir):
-    files = core.list_files(temp_dir)
-    assert "test.txt" in files
-
-
-def test_copy_file(temp_dir):
-    src = temp_dir / "test.txt"
-    dst = temp_dir / "copied.txt"
-    core.copy_file(src, dst)
-    assert dst.exists()
-
-
-def test_move_file(temp_dir):
-    src = temp_dir / "test.txt"
-    dst = temp_dir / "moved.txt"
-    core.move_file(src, dst)
-    assert dst.exists()
-    assert not src.exists()
-
-
-def test_delete_file(temp_dir):
-    file = temp_dir / "test.txt"
-    core.delete_file(file)
-    assert not file.exists()
+if __name__ == "__main__":
+    unittest.main()
